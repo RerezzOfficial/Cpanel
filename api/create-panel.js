@@ -5,9 +5,9 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
-    const { username, password, ram, disk, cpu, email } = req.body;
+    const { username, password, ram, email } = req.body;
 
-    if (!username || !password || !ram || !disk || !cpu || !email) {
+    if (!username || !password || !ram || !email) {
         return res.status(400).json({ error: 'Semua data wajib diisi' });
     }
 
@@ -21,8 +21,8 @@ export default async function handler(req, res) {
         password: password,
         email: email,
         ram: ram,
-        disk: disk,
-        cpu: cpu,
+        disk: '10GB', // Misal default disk 10GB
+        cpu: '2 CPU', // Misal default CPU 2
         loginLink: `${domain}/login`
     };
 
