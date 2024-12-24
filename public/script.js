@@ -8,7 +8,7 @@ document.getElementById('create-panel-form').addEventListener('submit', async fu
     const cpu = document.getElementById('cpu').value;
     const email = document.getElementById('email').value;
 
-    const response = await fetch('http://localhost:3000/create-panel', {
+    const response = await fetch('/api/create-panel', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
