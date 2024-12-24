@@ -1,28 +1,76 @@
+// Import library yang dibutuhkan
 const express = require('express');
+const fetch = require('node-fetch');
+const fs = require('fs');
 const app = express();
 const port = 3000;
 
+// Deklarasikan API Key dan Domain di sini
+const apikey = 'ptla_NrSSRjczpiA1ZB2wxRXHDpNOSSkkhKvuVFf3Xnek0vv';
+const domain = 'https://xyrezz-official.online-server.biz.id';
+
+// Middleware untuk meng-handle JSON body
 app.use(express.json());
+
+// Static files (untuk CSS, JS, dll)
 app.use(express.static('public'));
 
-app.post('/create-panel', (req, res) => {
+// Endpoint untuk membuat panel
+app.post('/create-panel', async (req, res) => {
     const { username, password, ram, disk, cpu, email } = req.body;
 
-    // Simulasi pembuatan server
-    const serverData = {
+    // Validasi input
+    if (!username || !password || !ram || !disk || !cpu || !email) {
+        return res.status(400).json({ error: 'Semua data wajib diisi' });
+    }
+
+    // Membuat data panel untuk dikirim ke API
+    const panelData = {
         username: username,
         password: password,
         email: email,
         ram: ram,
         disk: disk,
         cpu: cpu,
-        loginLink: "https://your-domain.com/login"
+        loginLink: `${domain}/login`
     };
 
-    // Mengembalikan data sebagai respon
-    res.json(serverData);
+    // Kirim permintaan untuk membuat server di API
+    try {
+        const response = await fetch(`${domain}/api/application/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apikey}`
+            },
+            body: JSON.stringify({
+                email: email,
+                username: username,
+                first_name: username,
+                last_name: username,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.errors) {
+            return res.status(500).json({ error: 'Gagal membuat server', details: data.errors });
+        }
+
+        // Mengirimkan data panel ke frontend setelah berhasil
+        res.json({
+            message: 'Server berhasil dibuat!',
+            panelData: panelData
+        });
+
+    } catch (error) {
+        console.error('Terjadi kesalahan saat membuat server:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server' });
+    }
 });
 
+// Jalankan server di port 3000
 app.listen(port, () => {
     console.log(`Server berjalan di http://localhost:${port}`);
 });
