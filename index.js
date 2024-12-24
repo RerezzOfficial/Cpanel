@@ -3,69 +3,85 @@ const fetch = require('node-fetch');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Deklarasi API key dan domain
+app.use(express.json()); // Parse incoming JSON requests
+
+// API Key and Domain
 const apikey = 'ptla_NrSSRjczpiA1ZB2wxRXHDpNOSSkkhKvuVFf3Xnek0vv';
 const domain = 'https://xyrezz-official.online-server.biz.id';
 
-// Middleware untuk meng-handle JSON body
-app.use(express.json());
-app.use(express.static('public'));  // Untuk mengakses file statis seperti CSS dan JS
+// Route to create panel
+app.post('/api/create-panel', async (req, res) => {
+    const { username, password, ram } = req.body;
 
-// Endpoint untuk membuat panel
-app.post('/create-panel', async (req, res) => {
-    const { username, password, ram, disk, cpu, email } = req.body;
-
-    // Validasi input
-    if (!username || !password || !ram || !disk || !cpu || !email) {
-        return res.status(400).json({ error: 'Semua data wajib diisi' });
+    if (!username || !password || !ram) {
+        return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Membuat data panel untuk dikirim ke API
-    const panelData = {
-        username: username,
-        password: password,
-        email: email,
-        ram: ram,
-        disk: disk,
-        cpu: cpu,
-        loginLink: `${domain}/login`
-    };
-
     try {
-        const response = await fetch(`${domain}/api/application/users`, {
+        // Creating user through API
+        const email = `${username}@gmail.com`;
+
+        const userResponse = await fetch(`${domain}/api/application/users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apikey}`
+                'Authorization': `Bearer ${apikey}`,
             },
             body: JSON.stringify({
                 email: email,
                 username: username,
                 first_name: username,
                 last_name: username,
-                password: password
-            })
+                language: 'en',
+                password: password,
+            }),
         });
 
-        const data = await response.json();
+        const userData = await userResponse.json();
 
-        if (data.errors) {
-            return res.status(500).json({ error: 'Gagal membuat server', details: data.errors });
+        if (userData.errors) {
+            return res.status(400).json({ error: 'Error creating user' });
         }
 
-        // Mengirimkan data panel ke frontend setelah berhasil
-        res.json({
-            message: 'Server berhasil dibuat!',
-            panelData: panelData
+        const userId = userData.attributes.id;
+        const eggId = '15'; // example egg ID
+        const serverResponse = await fetch(`${domain}/api/application/servers`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apikey}`,
+            },
+            body: JSON.stringify({
+                name: username,
+                user: userId,
+                egg: eggId,
+                limits: {
+                    memory: ram,
+                    cpu: 50,
+                    disk: 1025,
+                },
+            }),
         });
 
+        const serverData = await serverResponse.json();
+
+        if (serverData.errors) {
+            return res.status(400).json({ error: 'Error creating server' });
+        }
+
+        // Return success response
+        res.json({
+            username: username,
+            password: password,
+            ram: ram,
+            disk: 1025,
+            loginLink: `${domain}/login`, // Assuming you have a login page
+        });
     } catch (error) {
-        console.error('Terjadi kesalahan saat membuat server:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan pada server' });
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// Jalankan server
 app.listen(port, () => {
-    console.log(`Server berjalan di http://localhost:${port}`);
+    console.log(`Server running on http://localhost:${port}`);
 });
