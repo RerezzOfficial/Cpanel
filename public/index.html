@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Creation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Create Panel</h1>
+        <form id="panel-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="ram">RAM (MB):</label>
+            <input type="number" id="ram" name="ram" required>
+
+            <button type="submit">Create Panel</button>
+        </form>
+
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <h2>Panel Created</h2>
+                <pre id="panel-info"></pre>
+                <button id="close-popup">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
