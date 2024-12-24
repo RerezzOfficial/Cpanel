@@ -3,178 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creat Panel</title>
+    <title>Panel Creation</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
             background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
-
         .container {
-            background-color: white;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            margin-bottom: 8px;
-        }
-
-        input, select, button {
+        input, select {
+            width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
-
         button {
+            padding: 12px 20px;
             background-color: #28a745;
             color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
         }
-
         button:hover {
             background-color: #218838;
         }
-
         .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            z-index: 1000;
+        }
+        .popup h2 {
+            margin-top: 0;
+        }
+        .popup button {
+            background-color: #dc3545;
+            border-radius: 4px;
+        }
+        .overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .popup-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            z-index: 999;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Creat Panel Server</h1>
-        <form id="panelForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+<div class="container">
+    <h2>Form Create Panel</h2>
+    <form id="create-panel-form">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <select id="ram" required>
+            <option value="">Pilih RAM</option>
+            <option value="1GB">1GB</option>
+            <option value="2GB">2GB</option>
+            <option value="3GB">3GB</option>
+            <option value="4GB">4GB</option>
+            <option value="5GB">5GB</option>
+            <option value="6GB">6GB</option>
+            <option value="7GB">7GB</option>
+            <option value="8GB">8GB</option>
+            <option value="9GB">9GB</option>
+            <option value="10GB">10GB</option>
+        </select>
+        <input type="text" id="disk" placeholder="Disk (GB)" required>
+        <input type="text" id="cpu" placeholder="CPU" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <button type="submit">Create Panel</button>
+    </form>
+</div>
 
-            <label for="ram">Pilih RAM (1GB = 1000):</label>
-            <select id="ram" name="ram">
-                <option value="1000">1 GB</option>
-                <option value="2000">2 GB</option>
-                <option value="3000">3 GB</option>
-                <option value="4000">4 GB</option>
-                <option value="5000">5 GB</option>
-                <option value="6000">6 GB</option>
-                <option value="7000">7 GB</option>
-                <option value="8000">8 GB</option>
-                <option value="9000">9 GB</option>
-                <option value="10000">10 GB</option>
-            </select>
+<!-- Popup Data -->
+<div class="overlay" id="overlay"></div>
+<div class="popup" id="popup">
+    <h2>Data Panel Anda</h2>
+    <pre id="popup-content"></pre>
+    <button id="close-popup">Tutup</button>
+</div>
 
-            <button type="submit">Buat Panel</button>
-        </form>
-    </div>
+<script>
+    document.getElementById('create-panel-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <h2>Data Panel Anda</h2>
-            <pre id="dataPanel"></pre>
-            <button onclick="closePopup()">Tutup</button>
-        </div>
-    </div>
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const ram = document.getElementById('ram').value;
+        const disk = document.getElementById('disk').value;
+        const cpu = document.getElementById('cpu').value;
+        const email = document.getElementById('email').value;
 
-    <script>
-        const form = document.getElementById('panelForm');
-        const popup = document.getElementById('popup');
-        const dataPanel = document.getElementById('dataPanel');
-
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const ram = document.getElementById('ram').value;
-            const disk = 1025;
-            const cpu = 50;
-            const email = username + "@gmail.com";
-
-            // Kirim data ke server Node.js
-            const response = await fetch('/create-panel', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                    ram: ram,
-                    disk: disk,
-                    cpu: cpu,
-                    email: email,
-                })
-            });
-
-            const serverData = await response.json();
-
-            // Menampilkan pop-up dengan data server
-            const dataText = `
-            \`INFO PANEL\`
-            Username: ${serverData.username}
-            Password: ${serverData.password}
-            Login Link: ${serverData.loginLink}
-
-            \`SERVER SPECIFICATIONS\`
-            RAM: ${serverData.ram} MB
-            Disk: ${serverData.disk} MB
-            CPU: ${serverData.cpu}%
-
-            `;
-
-            dataPanel.textContent = dataText;
-            popup.style.display = 'flex';
+        const response = await fetch('http://localhost:3000/create-panel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username,
+                password,
+                ram,
+                disk,
+                cpu,
+                email
+            })
         });
 
-        function closePopup() {
-            popup.style.display = 'none';
+        const data = await response.json();
+
+        if (data.message) {
+            // Tampilkan popup dengan data panel
+            document.getElementById('popup-content').textContent = JSON.stringify(data.panelData, null, 2);
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
         }
-    </script>
+    });
+
+    document.getElementById('close-popup').addEventListener('click', function() {
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    });
+</script>
+
 </body>
 </html>
