@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creat Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Creat Panel Server</h1>
+        <form id="panelForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="ram">Pilih RAM (1GB = 1000):</label>
+            <select id="ram" name="ram">
+                <option value="1000">1 GB</option>
+                <option value="2000">2 GB</option>
+                <option value="3000">3 GB</option>
+                <option value="4000">4 GB</option>
+                <option value="5000">5 GB</option>
+                <option value="6000">6 GB</option>
+                <option value="7000">7 GB</option>
+                <option value="8000">8 GB</option>
+                <option value="9000">9 GB</option>
+                <option value="10000">10 GB</option>
+            </select>
+
+            <button type="submit">Buat Panel</button>
+        </form>
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <h2>Data Panel Anda</h2>
+            <pre id="dataPanel"></pre>
+            <button onclick="closePopup()">Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('panelForm');
+        const popup = document.getElementById('popup');
+        const dataPanel = document.getElementById('dataPanel');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const ram = document.getElementById('ram').value;
+            const disk = 1025;
+            const cpu = 50;
+            const email = username + "@gmail.com";
+
+            // Kirim data ke server Node.js
+            const response = await fetch('/create-panel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    ram: ram,
+                    disk: disk,
+                    cpu: cpu,
+                    email: email,
+                })
+            });
+
+            const serverData = await response.json();
+
+            // Menampilkan pop-up dengan data server
+            const dataText = `
+            \`INFO PANEL\`
+            Username: ${serverData.username}
+            Password: ${serverData.password}
+            Login Link: ${serverData.loginLink}
+
+            \`SERVER SPECIFICATIONS\`
+            RAM: ${serverData.ram} MB
+            Disk: ${serverData.disk} MB
+            CPU: ${serverData.cpu}%
+
+            `;
+
+            dataPanel.textContent = dataText;
+            popup.style.display = 'flex';
+        });
+
+        function closePopup() {
+            popup.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
