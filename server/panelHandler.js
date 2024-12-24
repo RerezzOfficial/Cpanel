@@ -10,8 +10,8 @@ const panelHandler = async (req, res) => {
 
   try {
     // Ganti dengan API dan URL yang sesuai
-    const domain = 'https://your-api-url.com';
-    const apikey = 'YOUR_API_KEY';
+    const domain = 'https://xyrezz-official.online-server.biz.id';
+    const apikey = 'ptla_NrSSRjczpiA1ZB2wxRXHDpNOSSkkhKvuVFf3Xnek0vv';
     const egg = '15'; // Sesuaikan dengan ID egg yang dibutuhkan
 
     // Request untuk membuat panel
