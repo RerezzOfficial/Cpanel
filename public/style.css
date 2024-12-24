@@ -1,8 +1,8 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
     margin: 0;
     padding: 20px;
-    background-color: #f4f4f9;
 }
 
 .container {
@@ -11,59 +11,34 @@ body {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-input, select {
+h1 {
+    text-align: center;
+}
+
+form input, form select {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
-    border: 1px solid #ccc;
     border-radius: 4px;
+    border: 1px solid #ddd;
 }
 
-button {
-    padding: 12px 20px;
-    background-color: #28a745;
+form input[type="submit"] {
+    background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #218838;
+form input[type="submit"]:hover {
+    background-color: #45a049;
 }
 
-.popup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    z-index: 1000;
-}
-
-.popup h2 {
-    margin-top: 0;
-}
-
-.popup button {
-    background-color: #dc3545;
-    border-radius: 4px;
-}
-
-.overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+#result {
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 1.6;
 }
