@@ -4,36 +4,44 @@ document.getElementById('create-panel-form').addEventListener('submit', async fu
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const ram = document.getElementById('ram').value;
-    const disk = document.getElementById('disk').value;
-    const cpu = document.getElementById('cpu').value;
     const email = document.getElementById('email').value;
 
-    const response = await fetch('/api/create-panel', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username,
-            password,
-            ram,
-            disk,
-            cpu,
-            email
-        })
-    });
+    const resultElement = document.getElementById('result');
+    resultElement.innerHTML = 'Loading...'; // Menampilkan loading saat proses berlangsung
 
-    const data = await response.json();
+    try {
+        const response = await fetch('/api/create-panel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username,
+                password,
+                ram,
+                email,
+            })
+        });
 
-    if (data.message) {
-        // Tampilkan popup dengan data panel
-        document.getElementById('popup-content').textContent = JSON.stringify(data.panelData, null, 2);
-        document.getElementById('popup').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
+        const data = await response.json();
+
+        if (response.ok) {
+            // Jika berhasil, tampilkan data panel
+            resultElement.innerHTML = `
+                <h2>Panel Created Successfully!</h2>
+                <p><strong>Username:</strong> ${data.panelData.username}</p>
+                <p><strong>Password:</strong> ${data.panelData.password}</p>
+                <p><strong>RAM:</strong> ${data.panelData.ram}</p>
+                <p><strong>Disk:</strong> ${data.panelData.disk}</p>
+                <p><strong>CPU:</strong> ${data.panelData.cpu}</p>
+                <p><strong>Login Link:</strong> <a href="${data.panelData.loginLink}" target="_blank">${data.panelData.loginLink}</a></p>
+            `;
+        } else {
+            // Jika ada error, tampilkan pesan error
+            resultElement.innerHTML = `<span style="color: red;">Error: ${data.error || 'Unknown Error'}</span>`;
+        }
+    } catch (error) {
+        // Menampilkan error jika fetch gagal
+        resultElement.innerHTML = `<span style="color: red;">Error: ${error.message}</span>`;
     }
-});
-
-document.getElementById('close-popup').addEventListener('click', function() {
-    document.getElementById('popup').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
 });
