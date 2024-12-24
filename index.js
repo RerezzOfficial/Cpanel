@@ -1,19 +1,15 @@
-// Import library yang dibutuhkan
 const express = require('express');
 const fetch = require('node-fetch');
-const fs = require('fs');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Deklarasikan API Key dan Domain di sini
+// Deklarasi API key dan domain
 const apikey = 'ptla_NrSSRjczpiA1ZB2wxRXHDpNOSSkkhKvuVFf3Xnek0vv';
 const domain = 'https://xyrezz-official.online-server.biz.id';
 
 // Middleware untuk meng-handle JSON body
 app.use(express.json());
-
-// Static files (untuk CSS, JS, dll)
-app.use(express.static('public'));
+app.use(express.static('public'));  // Untuk mengakses file statis seperti CSS dan JS
 
 // Endpoint untuk membuat panel
 app.post('/create-panel', async (req, res) => {
@@ -35,7 +31,6 @@ app.post('/create-panel', async (req, res) => {
         loginLink: `${domain}/login`
     };
 
-    // Kirim permintaan untuk membuat server di API
     try {
         const response = await fetch(`${domain}/api/application/users`, {
             method: 'POST',
@@ -70,7 +65,7 @@ app.post('/create-panel', async (req, res) => {
     }
 });
 
-// Jalankan server di port 3000
+// Jalankan server
 app.listen(port, () => {
     console.log(`Server berjalan di http://localhost:${port}`);
 });
