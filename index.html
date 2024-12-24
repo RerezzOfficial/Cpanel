@@ -1,34 +1,87 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Creator</title>
-    <link rel="stylesheet" href="public/style.css">
+    <title>Create Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
 </head>
 <body>
-    <h1>Panel Creator</h1>
-    <form id="createPanelForm">
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <input type="email" id="email" placeholder="Email" required>
+    <h1>Create Panel</h1>
+    <div class="form-container">
+        <label for="username">Username:</label>
+        <input type="text" id="username" required><br><br>
+        <label for="password">Password:</label>
+        <input type="text" id="password" required><br><br>
+        <label for="ram">RAM (1GB to 10GB):</label>
         <select id="ram" required>
-            <option value="1GB">1GB</option>
-            <option value="2GB">2GB</option>
-            <option value="3GB">3GB</option>
-            <option value="4GB">4GB</option>
-            <option value="5GB">5GB</option>
-            <option value="6GB">6GB</option>
-            <option value="7GB">7GB</option>
-            <option value="8GB">8GB</option>
-            <option value="9GB">9GB</option>
-            <option value="10GB">10GB</option>
-        </select>
-        <button type="submit">Create Panel</button>
-    </form>
+            <option value="1024">1GB</option>
+            <option value="2048">2GB</option>
+            <option value="3072">3GB</option>
+            <option value="4096">4GB</option>
+            <option value="5120">5GB</option>
+            <option value="6144">6GB</option>
+            <option value="7168">7GB</option>
+            <option value="8192">8GB</option>
+            <option value="9216">9GB</option>
+            <option value="10240">10GB</option>
+        </select><br><br>
+        <button id="submitBtn">Create Panel</button>
+    </div>
 
-    <div id="result"></div>
+    <div class="result" id="result"></div>
 
-    <script src="public/script.js"></script>
+    <script>
+        document.getElementById("submitBtn").addEventListener("click", async function() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const ram = document.getElementById("ram").value;
+
+            const response = await fetch('/api/create-panel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    ram: ram
+                }),
+            });
+
+            const result = await response.json();
+            const resultDiv = document.getElementById("result");
+
+            if (response.ok) {
+                resultDiv.innerHTML = `
+                    <h2 class="success">Panel Created Successfully!</h2>
+                    <p><strong>Username:</strong> ${result.username}</p>
+                    <p><strong>Password:</strong> ${result.password}</p>
+                    <p><strong>RAM:</strong> ${result.ram}MB</p>
+                    <p><strong>Disk:</strong> ${result.disk}MB</p>
+                    <p><strong>Login Link:</strong> <a href="${result.loginLink}" target="_blank">Login to Panel</a></p>
+                `;
+            } else {
+                resultDiv.innerHTML = `<p class="error">Error: ${result.error}</p>`;
+            }
+        });
+    </script>
 </body>
 </html>
