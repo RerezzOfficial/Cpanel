@@ -6,6 +6,8 @@ document.getElementById("createPanelForm").addEventListener("submit", async func
     const email = document.getElementById("email").value;
     const ram = document.getElementById("ram").value;
 
+    console.log('Form Data:', { username, password, email, ram }); // Tambahkan log
+
     const response = await fetch('/api/create-panel', {
         method: 'POST',
         headers: {
@@ -20,6 +22,7 @@ document.getElementById("createPanelForm").addEventListener("submit", async func
     });
 
     const result = await response.json();
+    console.log('Response:', result); // Log response untuk debugging
 
     const resultDiv = document.getElementById("result");
 
