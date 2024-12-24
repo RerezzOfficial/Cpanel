@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Creator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Create Your Panel</h1>
+  <form id="panelForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required />
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required />
+
+    <label for="ram">RAM:</label>
+    <select id="ram" name="ram">
+      <option value="1">1 GB</option>
+      <option value="2">2 GB</option>
+      <option value="4">4 GB</option>
+      <option value="8">8 GB</option>
+      <option value="10">10 GB</option>
+    </select>
+
+    <button type="submit">Create Panel</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('panelForm');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('name'),
+        password: formData.get('password'),
+        ram: formData.get('ram')
+      };
+
+      try {
+        const response = await fetch('/api/create-panel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert(`Panel created successfully!\n\nUsername: ${result.username}\nPassword: ${result.password}\nRAM: ${result.ram} GB`);
+        } else {
+          alert(`Error: ${result.message}`);
+        }
+      } catch (error) {
+        alert(`Failed to create panel: ${error.message}`);
+      }
+    });
+  </script>
+</body>
+</html>
