@@ -1,47 +1,38 @@
-document.getElementById('create-panel-form').addEventListener('submit', async function(event) {
+document.getElementById("createPanelForm").addEventListener("submit", async function(event) {
     event.preventDefault();
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const ram = document.getElementById('ram').value;
-    const email = document.getElementById('email').value;
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value;
+    const ram = document.getElementById("ram").value;
 
-    const resultElement = document.getElementById('result');
-    resultElement.innerHTML = 'Loading...'; // Menampilkan loading saat proses berlangsung
+    const response = await fetch('/api/create-panel', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password,
+            email: email,
+            ram: ram
+        })
+    });
 
-    try {
-        const response = await fetch('/api/create-panel', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username,
-                password,
-                ram,
-                email,
-            })
-        });
+    const result = await response.json();
 
-        const data = await response.json();
+    const resultDiv = document.getElementById("result");
 
-        if (response.ok) {
-            // Jika berhasil, tampilkan data panel
-            resultElement.innerHTML = `
-                <h2>Panel Created Successfully!</h2>
-                <p><strong>Username:</strong> ${data.panelData.username}</p>
-                <p><strong>Password:</strong> ${data.panelData.password}</p>
-                <p><strong>RAM:</strong> ${data.panelData.ram}</p>
-                <p><strong>Disk:</strong> ${data.panelData.disk}</p>
-                <p><strong>CPU:</strong> ${data.panelData.cpu}</p>
-                <p><strong>Login Link:</strong> <a href="${data.panelData.loginLink}" target="_blank">${data.panelData.loginLink}</a></p>
-            `;
-        } else {
-            // Jika ada error, tampilkan pesan error
-            resultElement.innerHTML = `<span style="color: red;">Error: ${data.error || 'Unknown Error'}</span>`;
-        }
-    } catch (error) {
-        // Menampilkan error jika fetch gagal
-        resultElement.innerHTML = `<span style="color: red;">Error: ${error.message}</span>`;
+    if (response.ok) {
+        resultDiv.innerHTML = `
+            <h2>Panel Created Successfully!</h2>
+            <p>Username: ${result.panelData.username}</p>
+            <p>Password: ${result.panelData.password}</p>
+            <p>RAM: ${result.panelData.ram}</p>
+            <p>Disk: ${result.panelData.disk}</p>
+            <p>Login Link: <a href="${result.panelData.loginLink}" target="_blank">Login to Panel</a></p>
+        `;
+    } else {
+        resultDiv.innerHTML = `<p style="color: red;">Error: ${result.error}</p>`;
     }
 });
