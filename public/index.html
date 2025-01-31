@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pembelian Panel</title>
+  <style>
+    /* Resetting default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      padding: 20px;
+    }
+
+    /* Container utama untuk semua halaman */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Heading utama */
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* Styling untuk form di halaman index */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Styling untuk detail pembayaran di halaman payment */
+    .payment-details {
+      margin-bottom: 20px;
+    }
+
+    .payment-details p {
+      font-size: 18px;
+    }
+
+    .qris {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .qris img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Halaman Utama (Index) -->
+    <h1>Pembelian Panel</h1>
+    <form action="/buypanel" method="POST">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required /><br><br>
+      
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" name="phone" required /><br><br>
+      
+      <button type="submit" class="btn">Beli Panel</button>
+    </form>
+  </div>
+
+  <!-- Halaman Pembayaran -->
+  <div class="container">
+    <h1>Konfirmasi Pembayaran</h1>
+    <div class="payment-details">
+      <p><strong>Nominal:</strong> Rp <%= nominal %></p>
+      <p><strong>Expired At:</strong> <%= expired_at %></p>
+    </div>
+    <div class="qris">
+      <img src="/qris.jpg" alt="QR Code" />
+    </div>
+    <p>Harap lakukan pembayaran menggunakan QR di atas.</p>
+    <p>Jika pembayaran berhasil, proses pembuatan panel akan dilanjutkan secara otomatis.</p>
+  </div>
+
+</body>
+</html>
