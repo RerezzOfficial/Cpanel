@@ -1,17 +1,18 @@
 {
-  "name": "my-nodejs-panel",
+  "name": "deposit-app",
   "version": "1.0.0",
-  "description": "Panel untuk pembuatan server menggunakan API",
-  "main": "server/app.js",
-  "scripts": {
-    "start": "node server/app.js"
-  },
+  "description": "Aplikasi Deposit dengan QRIS",
+  "main": "index.js",
   "dependencies": {
-    "express": "^4.18.2",
-    "node-fetch": "^3.2.0",
-    "crypto": "^1.0.1"
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "node-fetch": "^3.3.2",
+    "path": "^0.12.7",
+    "qrcode": "^1.5.4"
   },
-  "engines": {
-    "node": "16.x"
-  }
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Nama Anda",
+  "license": "MIT"
 }
